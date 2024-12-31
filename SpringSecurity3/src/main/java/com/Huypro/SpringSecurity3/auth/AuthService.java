@@ -26,7 +26,7 @@ public class AuthService {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    public void registerUser(RegisterRequest registerRequest) {
+    public AuthResponse registerUser(RegisterRequest registerRequest) {
         if(userReprosity.existsByEmail(registerRequest.getEmail())){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "The email Existed.");
@@ -43,9 +43,10 @@ public class AuthService {
         userEntity.setRole(Role.ROLE_USER);
         userReprosity.save(userEntity);
         // không trả về void cho đơn giản đúng ra phải trả về mã xác thực bên gmail để xác thực
-
+        String jwtToken = jwtService.generateToken(userEntity);
+        return AuthResponse.builder().accessToken(jwtToken).build();
     }
-    public void registerAdmin(RegisterRequest registerRequest) {
+    public AuthResponse registerAdmin(RegisterRequest registerRequest) {
         if(userReprosity.existsByEmail(registerRequest.getEmail())){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "The email Existed.");
@@ -62,6 +63,9 @@ public class AuthService {
         userEntity.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
         userEntity.setRole(Role.ROLE_ADMIN);
         userReprosity.save(userEntity);
+        String jwtToken = jwtService.generateToken(userEntity);
+        return AuthResponse.builder().accessToken(jwtToken).build();
+
 
 
     }

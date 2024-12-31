@@ -2,13 +2,13 @@ package com.Huypro.SpringSecurity3.auth;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 
+@Builder
 public class AuthResponse {
 
     @JsonProperty("access_token")
@@ -20,4 +20,6 @@ public class AuthResponse {
 
     public AuthResponse() {
     }
+
+
 }

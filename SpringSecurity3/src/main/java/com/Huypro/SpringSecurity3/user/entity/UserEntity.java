@@ -2,11 +2,7 @@ package com.Huypro.SpringSecurity3.user.entity;
 
 import com.Huypro.SpringSecurity3.user.roleEnum.Role;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 
-
-
-import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
