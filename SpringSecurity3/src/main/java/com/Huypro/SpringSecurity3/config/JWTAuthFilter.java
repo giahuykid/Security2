@@ -67,10 +67,4 @@ public class JWTAuthFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
 
     }
-   // cách 2
-    // không cần xác thực khi thực hiện API giống secuConfig
-    @Override
-    protected boolean shouldNotFilter(@NonNull HttpServletRequest request) throws ServletException {
-        return request.getServletPath().contains("/login");
-    }
 }

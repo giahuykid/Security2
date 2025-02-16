@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 @Data
 
-@Builder
 public class AuthResponse {
 
     @JsonProperty("access_token")

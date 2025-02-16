@@ -44,7 +44,7 @@ public class AuthService {
         userReprosity.save(userEntity);
         // không trả về void cho đơn giản đúng ra phải trả về mã xác thực bên gmail để xác thực
         String jwtToken = jwtService.generateToken(userEntity);
-        return AuthResponse.builder().accessToken(jwtToken).build();
+        return new AuthResponse(jwtToken);
     }
     public AuthResponse registerAdmin(RegisterRequest registerRequest) {
         if(userReprosity.existsByEmail(registerRequest.getEmail())){
@@ -64,7 +64,7 @@ public class AuthService {
         userEntity.setRole(Role.ROLE_ADMIN);
         userReprosity.save(userEntity);
         String jwtToken = jwtService.generateToken(userEntity);
-        return AuthResponse.builder().accessToken(jwtToken).build();
+        return new AuthResponse(jwtToken);
 
 
 
