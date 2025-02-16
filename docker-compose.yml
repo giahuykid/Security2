@@ -1,0 +1,44 @@
+version: "3.8"
+
+services:
+  # MySQL Database Service
+  mysql-docker:
+    image: mysql:8
+    container_name: mysql-dockercompose
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: 12345
+      MYSQL_DATABASE: login
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  # Backend Service (Spring Boot)
+  backend:
+    build:
+      context: ./SpringSecurity3
+      dockerfile: ../docker/backend/Dockerfile
+    container_name: security_v.1.9.0
+    depends_on:
+      - mysql-docker
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-dockercompose:3306/login
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 12345
+    ports:
+      - "8080:8080"
+
+  # Frontend Service (React + Nginx)
+  frontend:
+    build:
+      context: ./login_register
+      dockerfile: ../docker/frontend/Dockerfile
+    container_name: frontendsecurity_v.1.1.0
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+
+volumes:
+  mysql_data:
