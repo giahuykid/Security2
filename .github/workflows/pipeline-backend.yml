@@ -23,7 +23,7 @@ jobs:
 
       - name: Running Unit Tests
         run: |
-          cd SrpingSecurity3
+          cd SpringSecurity3
           ./mvnw clean compile
   unit-tests:
     runs-on: self-hosted
@@ -62,7 +62,7 @@ jobs:
 
       - name: Compile project
         run: |
-          cd SrpingSecurity3
+          cd SpringSecurity3
           ./mvnw clean compile
 
   build-image:
@@ -78,8 +78,8 @@ jobs:
       - name: Extract project version
         id: extract_version
         run: |
-          cd SrpingSecurity3
-          echo "VERSION=$(./mvnw -q -Dexec.executable='echo' -Dexec.args='${project.version}' --non-recursive exec:exec)" >> $GITHUB_OUTPUT
+          cd SpringSecurity3
+          echo "VERSION=$(./mvnw -q -D exec.executable='echo' -D exec.args='${project.version}' --non-recursive exec:exec)" >> $GITHUB_OUTPUT
 
       - name: Login to DockerHub
         uses: docker/login-action@v3
@@ -115,7 +115,7 @@ jobs:
       - name: Set ENV variable and deploy
         run: |
           
-          ssh -i ${{secrets.AWS_SSH_KEY}} ${{ secrets.AWS_USERNAME }}@${{ secrets.AWS_IP }} <<EOF
+          ssh -oStrictHostKeyChecking=no -i ${{secrets.AWS_SSH_KEY}} ${{ secrets.AWS_USERNAME }}@${{ secrets.AWS_IP }} <<EOF
           cd ci-cd
           docker compose -f docker-compose.yml pull -q
           docker compose -f docker-compose.yml up -d

@@ -33,7 +33,7 @@ jobs:
           file: docker/frontend/Dockerfile
           push: true
           platforms: linux/amd64
-          tags: ${{ secrets.DOCKER_USERNAM }}/frontend,${{ secrets.DOCKER_USERNAM }}/frontend:${{ steps.extract_version.outputs.VERSION }}
+          tags: ${{ secrets.DOCKER_USERNAME }}/frontend,${{ secrets.DOCKER_USERNAME }}/frontend:${{ steps.extract_version.outputs.VERSION }}
 
   deploy:
     name: Deploy Frontend
@@ -49,7 +49,7 @@ jobs:
 
       - name: Set ENV variable and deploy
         run: |
-          ssh -i ${{secrets.AWS_SSH_KEY}} ${{ secrets.AWS_USERNAME }}@${{ secrets.AWS_IP }} <<EOF
+          ssh -oStrictHostKeyChecking=no -i ${{secrets.AWS_SSH_KEY}} ${{ secrets.AWS_USERNAME }}@${{ secrets.AWS_IP }} <<EOF
           cd ci-cd
           docker compose -f docker-compose.yml pull -q
           docker compose -f docker-compose.yml up -d
