@@ -47,7 +47,7 @@ jobs:
   build:
     runs-on: self-hosted
     name: Build backend
-    needs: [compile, unit-tests]
+    needs: [ compile, unit-tests ]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -68,7 +68,7 @@ jobs:
   build-image:
     name: Build Docker image
     runs-on: self-hosted
-    needs: [build]
+    needs: [ build ]
     steps:
       - name: Setup JDK
         uses: actions/setup-java@v4
@@ -103,8 +103,12 @@ jobs:
   deploy:
     name: Deploy Backend
     runs-on: self-hosted
-    needs: [build-image]
+    needs: [ build-image ]
     steps:
+      - name: Create SSH Key File
+        run: |
+              echo "${{ secrets.AWS_SSH_KEY }}" > ~/.ssh/aws_key
+              chmod 600 ~/.ssh/aws_key
 
       - name: Create deployment folder
         run: ssh -i ${{secrets.AWS_SSH_KEY}} ${{ secrets.AWS_USERNAME }}@${{ secrets.AWS_IP }} "mkdir -p ci-cd"

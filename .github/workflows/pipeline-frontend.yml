@@ -40,6 +40,10 @@ jobs:
     runs-on: self-hosted
     needs: [ build-image ]
     steps:
+      - name: Create SSH Key File
+        run: |
+            echo "${{ secrets.AWS_SSH_KEY }}" > ~/.ssh/aws_key
+            chmod 600 ~/.ssh/aws_key
 
       - name: Create deployment folder
         run: ssh -i ${{secrets.AWS_SSH_KEY}} ${{ secrets.AWS_USERNAME }}@${{ secrets.AWS_IP }} "mkdir -p ci-cd"
