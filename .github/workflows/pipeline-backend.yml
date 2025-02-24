@@ -42,7 +42,7 @@ jobs:
 
       - name: Running Unit Tests
         run: |
-          cd SrpingSecurity3
+          cd SpringSecurity3
           ./mvnw clean test
   build:
     runs-on: self-hosted
