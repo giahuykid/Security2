@@ -107,8 +107,8 @@ jobs:
     steps:
       - name: Create SSH Key File
         run: |
-              echo "${{ secrets.AWS_SSH_KEY }}" > ~/.ssh/aws_key
-              chmod 600 ~/.ssh/aws_key
+          echo "${{ secrets.AWS_SSH_KEY }}" > ~/.ssh/aws_key
+          chmod 600 ~/.ssh/aws_key
 
       - name: Create deployment folder
         run: ssh -i ${{secrets.AWS_SSH_KEY}} ${{ secrets.AWS_USERNAME }}@${{ secrets.AWS_IP }} "mkdir -p ci-cd"
@@ -119,7 +119,7 @@ jobs:
       - name: Set ENV variable and deploy
         run: |
           
-          ssh  -i "${{secrets.AWS_SSH_KEY}}" -oStrictHostKeyChecking=no ${{ secrets.AWS_USERNAME }}@${{ secrets.AWS_IP }} <<EOF
+          ssh  -i ~/.ssh/aws_key -oStrictHostKeyChecking=no ${{ secrets.AWS_USERNAME }}@${{ secrets.AWS_IP }} <<EOF
           cd ci-cd
           docker compose -f docker-compose.yml pull -q
           docker compose -f docker-compose.yml up -d
