@@ -1,4 +1,4 @@
-name: CI/CD Frontend
+name: Deploy Backend & Frontend
 
 on:
   push:
@@ -7,14 +7,28 @@ on:
 
 jobs:
   deploy:
-    name: Deploy Frontend
-    runs-on: self-hosted
+    name: Deploy Docker Compose
+    runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
       - name: Login to Docker Hub
         run: docker login -u "${{ secrets.DOCKER_USERNAME }}" -p "${{ secrets.DOCKER_TOKEN }}"
 
-      - name: Pull Latest Image & Restart Services
+      - name: Create SSH Key
         run: |
-          cd /path/to/ci-cd   # Đổi thành đường dẫn thư mục chứa docker-compose.yml trên server
-          docker compose pull
-          docker compose up -d --remove-orphans
+          echo "${{ secrets.AWS_KEY }}" > ~/.ssh/aws_key
+          chmod 600 ~/.ssh/aws_key
+
+      - name: Copy docker-compose.yml to Server
+        run: scp -i ~/.ssh/aws_key -oStrictHostKeyChecking=no docker-compose.yml ${{ secrets.AWS_USERNAME }}@${{ secrets.AWS_IP }}:/home/ubuntu/ci-cd/docker-compose.yml
+
+      - name: SSH vào server và chạy docker-compose
+        run: |
+          ssh -i ~/.ssh/aws_key -oStrictHostKeyChecking=no ${{ secrets.AWS_USERNAME }}@${{ secrets.AWS_IP }} <<EOF
+          cd /home/ubuntu/ci-cd  # Vào thư mục chứa docker-compose.yml
+          docker compose pull  # Kéo image mới từ Docker Hub
+          docker compose up -d --remove-orphans  # Chạy container mới
+          docker system prune -f  # Dọn dẹp image cũ (tùy chọn)
+          EOF

@@ -1,4 +1,4 @@
-name: CI/CD Backend
+name: Deploy Backend & Frontend
 
 on:
   push:
@@ -7,14 +7,16 @@ on:
 
 jobs:
   deploy:
-    name: Deploy Backend
-    runs-on: self-hosted
+    name: Deploy Docker Compose
+    runs-on: self-hosted  # Chạy trên máy ảo GitHub Actions
     steps:
       - name: Login to Docker Hub
         run: docker login -u "${{ secrets.DOCKER_USERNAME }}" -p "${{ secrets.DOCKER_TOKEN }}"
 
-      - name: Pull Latest Image & Restart Services
+      - name: run docker-compose
         run: |
-          cd /path/to/ci-cd  # Đổi path thành thư mục chứa docker-compose.yml trên server
-          docker compose pull
-          docker compose up -d --remove-orphans
+          cd /home/ubuntu/ci-cd  # Thư mục chứa docker-compose.yml trên server
+          docker compose pull  # Kéo image mới từ Docker Hub
+          docker compose up -d --remove-orphans  # Chạy container mới
+          docker system prune -f  # Dọn dẹp image cũ (tùy chọn)
+          EOF
