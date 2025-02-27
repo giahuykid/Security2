@@ -19,5 +19,5 @@ jobs:
 
       - name: Run Docker Compose
         run: |
-          sudo docker-compose -f /home/ubuntu/web/docker-compose.yml down
-          sudo docker-compose -f /home/ubuntu/web/docker-compose.yml up -d
+          sudo docker compose -f /home/ubuntu/web/docker-compose.yml down
+          sudo docker compose -f /home/ubuntu/web/docker-compose.yml up -d
