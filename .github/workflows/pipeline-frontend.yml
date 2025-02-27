@@ -19,6 +19,5 @@ jobs:
 
       - name: Run Docker Compose
         run: |
-          sudo cd /opt/myapp/
-          docker-compose down
-          docker-compose up -d
+          sudo docker-compose -f /opt/myapp/docker-compose.yml down
+          sudo docker-compose -f /opt/myapp/docker-compose.yml up -d
