@@ -15,7 +15,6 @@ jobs:
 
       - name: Create directory and copy docker-compose file
         run: |
-          mkdir -p /opt/myapp/
           cp docker-compose.yml /opt/myapp/
 
       - name: Run Docker Compose
