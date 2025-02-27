@@ -15,9 +15,9 @@ jobs:
 
       - name: copy docker-compose file
         run: |
-          sudo cp docker-compose.yml /opt/myapp/
+          sudo cp docker-compose.yml /home/ubuntu/web
 
       - name: Run Docker Compose
         run: |
-          sudo docker-compose -f /opt/myapp/docker-compose.yml down
-          sudo docker-compose -f /opt/myapp/docker-compose.yml up -d
+          sudo docker-compose -f /home/ubuntu/web/docker-compose.yml down
+          sudo docker-compose -f /home/ubuntu/web/docker-compose.yml up -d
