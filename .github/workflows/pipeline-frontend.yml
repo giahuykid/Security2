@@ -1,4 +1,4 @@
-name: Deploy Backend & Frontend
+name: Deploy with Docker Compose
 
 on:
   push:
@@ -7,28 +7,19 @@ on:
 
 jobs:
   deploy:
-    name: Deploy Docker Compose
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
+
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Login to Docker Hub
-        run: docker login -u "${{ secrets.DOCKER_USERNAME }}" -p "${{ secrets.DOCKER_TOKEN }}"
-
-      - name: Create SSH Key
+      - name: Create directory and copy docker-compose file
         run: |
-          echo "${{ secrets.AWS_KEY }}" > ~/.ssh/aws_key
-          chmod 600 ~/.ssh/aws_key
+          mkdir -p /opt/myapp/
+          cp docker-compose.yml /opt/myapp/
 
-      - name: Copy docker-compose.yml to Server
-        run: scp -i ~/.ssh/aws_key -oStrictHostKeyChecking=no docker-compose.yml ${{ secrets.AWS_USERNAME }}@${{ secrets.AWS_IP }}:/home/ubuntu/ci-cd/docker-compose.yml
-
-      - name: SSH vào server và chạy docker-compose
+      - name: Run Docker Compose
         run: |
-          ssh -i ~/.ssh/aws_key -oStrictHostKeyChecking=no ${{ secrets.AWS_USERNAME }}@${{ secrets.AWS_IP }} <<EOF
-          cd /home/ubuntu/ci-cd  # Vào thư mục chứa docker-compose.yml
-          docker compose pull  # Kéo image mới từ Docker Hub
-          docker compose up -d --remove-orphans  # Chạy container mới
-          docker system prune -f  # Dọn dẹp image cũ (tùy chọn)
-          EOF
+          cd /opt/myapp/
+          docker-compose down
+          docker-compose up -d
