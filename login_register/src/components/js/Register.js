@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import "../css/register.css"; // Import file CSS
 const Register = () => {
     const [formData, setFormData] = useState({
         firstName: "",
@@ -50,38 +50,50 @@ const Register = () => {
     };
 
     return (
-        <div>
+        <div className="registerContainer">
             <h2>Register</h2>
-            <form onSubmit={handleSubmit}>
-                <input
-                    type="text"
-                    name="firstName"
-                    placeholder="First Name"
-                    value={formData.firstName}
-                    onChange={handleChange}
-                />
-                <input
-                    type="text"
-                    name="lastName"
-                    placeholder="Last Name"
-                    value={formData.lastName}
-                    onChange={handleChange}
-                />
-                <input
-                    type="email"
-                    name="email"
-                    placeholder="Email"
-                    value={formData.email}
-                    onChange={handleChange}
-                />
-                <input
-                    type="password"
-                    name="password"
-                    placeholder="Password"
-                    value={formData.password}
-                    onChange={handleChange}
-                />
-                <button type="submit">Register</button>
+            <form onSubmit={handleSubmit} className="registerForm">
+                <div className="formGroup">
+                    <label>First Name</label>
+                    <input
+                        type="text"
+                        name="firstName"
+                        placeholder="First Name"
+                        value={formData.firstName}
+                        onChange={handleChange}
+                    />
+                </div>
+                <div className="formGroup">
+                    <label>Last Name</label>
+                    <input
+                        type="text"
+                        name="lastName"
+                        placeholder="Last Name"
+                        value={formData.lastName}
+                        onChange={handleChange}
+                    />
+                </div>
+                <div className="formGroup">
+                    <label>Email</label>
+                    <input
+                        type="email"
+                        name="email"
+                        placeholder="Email"
+                        value={formData.email}
+                        onChange={handleChange}
+                    />
+                </div>
+                <div className="formGroup">
+                    <label>Password</label>
+                    <input
+                        type="password"
+                        name="password"
+                        placeholder="Password"
+                        value={formData.password}
+                        onChange={handleChange}
+                    />
+                </div>
+                <button type="submit" className="registerBtn">Register</button>
             </form>
             {error && <p>{error}</p>}
         </div>

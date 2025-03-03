@@ -1,9 +1,12 @@
 import React, { useState } from "react";
+import "../css/login.css"; // Import file CSS
+import { Link } from "react-router-dom"; // Import Link
+
 
 const Login = () => {
     const [credentials, setCredentials] = useState({ email: "", password: "" });
     const [error, setError] = useState("");
-    const [successMessage, setSuccessMessage] = useState(""); // Thêm state cho thông báo thành công
+    const [successMessage, setSuccessMessage] = useState("");
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -23,11 +26,11 @@ const Login = () => {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(credentials),
-                credentials: "include", // Gửi cookie cùng với yêu cầu
+                credentials: "include",
             });
 
             if (response.ok) {
-                setSuccessMessage("Đăng nhập thành công!"); // Hiển thị thông báo thành công
+                setSuccessMessage("Đăng nhập thành công!");
             } else {
                 const errorData = await response.json();
                 setError(errorData.message || "Đăng nhập thất bại! Vui lòng thử lại.");
@@ -38,26 +41,35 @@ const Login = () => {
     };
 
     return (
-        <div>
+        <div className="loginContainer">
             <h2>Login</h2>
-            <form onSubmit={handleSubmit}>
-                <input
-                    type="email"
-                    name="email"
-                    placeholder="Email"
-                    value={credentials.email}
-                    onChange={handleChange}
-                />
-                <input
-                    type="password"
-                    name="password"
-                    placeholder="Password"
-                    value={credentials.password}
-                    onChange={handleChange}
-                />
-                <button type="submit">Login</button>
+            <form onSubmit={handleSubmit} className="loginForm">
+                <div className="formGroup">
+                    <label>Email</label>
+                    <input
+                        type="email"
+                        name="email"
+                        placeholder="Email"
+                        value={credentials.email}
+                        onChange={handleChange}
+                    />
+                </div>
+                <div className="formGroup">
+                    <label>Password</label>
+                    <input
+                        type="password"
+                        name="password"
+                        placeholder="Password"
+                        value={credentials.password}
+                        onChange={handleChange}
+                    />
+                </div>
+                <button type="submit" className="loginBtn">Login</button>
             </form>
-            {successMessage && <p>{successMessage}</p>} {/* Hiển thị thông báo thành công */}
+            <p style={{textAlign: "center", marginTop: "10px"}}>
+                Don't have an account? <Link to="/register">Register</Link>
+            </p>
+            {successMessage && <p>{successMessage}</p>}
             {error && <p>{error}</p>}
         </div>
     );
