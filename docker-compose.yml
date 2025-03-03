@@ -3,7 +3,7 @@ version: "3.8"
 services:
   # MySQL Database Service
   mysql:
-    image: giahuy1412/import
+    image: giahuy1412/mysql
     container_name: mysql-docker
     restart: unless-stopped
     environment:
