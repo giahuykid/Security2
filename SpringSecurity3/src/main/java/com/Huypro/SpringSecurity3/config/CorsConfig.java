@@ -9,7 +9,7 @@ public class CorsConfig {
     @Bean
     public UrlBasedCorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOrigin("http://localhost:3000");
+        configuration.addAllowedOrigin("http://localhost:3000,http://13.213.1.100:8080");
         configuration.addAllowedMethod("*"); // Cho phép tất cả các phương thức (GET, POST, PUT, DELETE, v.v.)
         configuration.addAllowedHeader("*"); // Cho phép tất cả các header
         configuration.setAllowCredentials(true); // Cho phép gửi cookie

@@ -16,7 +16,7 @@ services:
 
   # Backend Service (Spring Boot)
   backend:
-    image: giahuy1412/backend:v1.9.5  # Thay vì build, sử dụng image đã push
+    image: giahuy1412/backend:v1.9.6  # Thay vì build, sử dụng image đã push
     container_name: bsecurity_v.1.9.2
     depends_on:
       - mysql
