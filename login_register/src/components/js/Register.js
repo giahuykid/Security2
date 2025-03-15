@@ -29,7 +29,7 @@ const Register = () => {
         }
 
         try {
-            const response = await fetch("http://13.213.1.100:8080/register/user", {
+            const response = await fetch("http://18.142.237.185:8080/register/user", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
