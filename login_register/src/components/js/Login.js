@@ -1,12 +1,12 @@
 import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import "../css/login.css"; // Import file CSS
-import { Link } from "react-router-dom"; // Import Link
-
 
 const Login = () => {
     const [credentials, setCredentials] = useState({ email: "", password: "" });
     const [error, setError] = useState("");
     const [successMessage, setSuccessMessage] = useState("");
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -30,7 +30,13 @@ const Login = () => {
             });
 
             if (response.ok) {
+                const data = await response.json();
+                localStorage.setItem("token", data.token); // Lưu token vào localStorage
                 setSuccessMessage("Đăng nhập thành công!");
+
+                setTimeout(() => {
+                    navigate("/"); // Chuyển hướng sau khi đăng nhập
+                }, 1000);
             } else {
                 const errorData = await response.json();
                 setError(errorData.message || "Đăng nhập thất bại! Vui lòng thử lại.");
@@ -66,11 +72,11 @@ const Login = () => {
                 </div>
                 <button type="submit" className="loginBtn">Login</button>
             </form>
-            <p style={{textAlign: "center", marginTop: "10px"}}>
+            <p style={{ textAlign: "center", marginTop: "10px" }}>
                 Don't have an account? <Link to="/register">Register</Link>
             </p>
-            {successMessage && <p>{successMessage}</p>}
-            {error && <p>{error}</p>}
+            {successMessage && <p className="successMessage">{successMessage}</p>}
+            {error && <p className="errorMessage">{error}</p>}
         </div>
     );
 };

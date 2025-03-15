@@ -15,16 +15,16 @@ services:
 #      - mysql_data:/var/lib/mysql
 
   # Backend Service (Spring Boot)
-  # vì deployment nên dùng RDS 
+  # vì deployment nên dùng RDS
   backend:
-    image: giahuy1412/backend:v1.9.6  # Thay vì build, sử dụng image đã push
+    image: giahuy1412/backend:v2  # Thay vì build, sử dụng image đã push
     container_name: bsecurity_v.1.9.2
     ports:
       - "8080:8080"
 
   # Frontend Service (React + Nginx)
   frontend:
-    image: giahuy1412/frontend:v1.1.2 # Thay vì build, sử dụng image đã push
+    image: giahuy1412/frontend:v1.3 # Thay vì build, sử dụng image đã push
     container_name: fsecurity
     depends_on:
       - backend

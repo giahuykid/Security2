@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../css/register.css"; // Import file CSS
+
 const Register = () => {
     const [formData, setFormData] = useState({
         firstName: "",
@@ -22,7 +23,7 @@ const Register = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Validate inputs
+        // Kiểm tra dữ liệu nhập vào
         if (!formData.firstName || !formData.lastName || !formData.email || !formData.password) {
             setError("Tất cả các trường đều phải được điền!");
             return;
@@ -35,7 +36,7 @@ const Register = () => {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(formData),
-                credentials: "include", // Gửi cookie cùng với yêu cầu
+                credentials: "include",
             });
 
             if (response.ok) {
@@ -95,7 +96,7 @@ const Register = () => {
                 </div>
                 <button type="submit" className="registerBtn">Register</button>
             </form>
-            {error && <p>{error}</p>}
+            {error && <p className="errorMessage">{error}</p>}
         </div>
     );
 };
