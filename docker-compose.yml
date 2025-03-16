@@ -17,7 +17,7 @@ services:
   # Backend Service (Spring Boot)
   # vì deployment nên dùng RDS
   backend:
-    image: giahuy1412/backend:v2  # Thay vì build, sử dụng image đã push
+    image: giahuy1412/backend:v2.1  # Thay vì build, sử dụng image đã push
     container_name: bsecurity_v.1.9.2
     ports:
       - "8080:8080"
