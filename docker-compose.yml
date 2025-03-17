@@ -24,7 +24,7 @@ services:
 
   # Frontend Service (React + Nginx)
   frontend:
-    image: giahuy1412/frontend:v1.3 # Thay vì build, sử dụng image đã push
+    image: giahuy1412/frontend:latest # Thay vì build, sử dụng image đã push
     container_name: fsecurity
     depends_on:
       - backend

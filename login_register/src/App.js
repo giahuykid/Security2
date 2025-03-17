@@ -14,12 +14,11 @@ function App() {
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/hello-user" element={<HelloUser />} />
-
                 </Routes>
             </div>
         </Router>
     );
 }
 
-
 export default App;
+
