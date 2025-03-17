@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "../css/register.css"; // Import file CSS
+import "../css/register.css";
 
 const Register = () => {
     const [formData, setFormData] = useState({
@@ -10,6 +10,8 @@ const Register = () => {
         password: "",
     });
     const [error, setError] = useState("");
+    const [successMessage, setSuccessMessage] = useState("");
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     const handleChange = (e) => {
@@ -22,10 +24,13 @@ const Register = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
+        setError("");
 
         // Kiểm tra dữ liệu nhập vào
         if (!formData.firstName || !formData.lastName || !formData.email || !formData.password) {
             setError("Tất cả các trường đều phải được điền!");
+            setLoading(false);
             return;
         }
 
@@ -39,14 +44,18 @@ const Register = () => {
                 credentials: "include",
             });
 
-            if (response.ok) {
-                navigate("/login"); // Chuyển hướng đến trang đăng nhập nếu thành công
-            } else {
-                const errorData = await response.json();
-                setError(errorData.message || "Đăng ký thất bại! Vui lòng thử lại.");
+            if (!response.ok) {
+                throw new Error("Đăng ký thất bại! Email có thể đã tồn tại.");
             }
+
+            setSuccessMessage("Đăng ký thành công! Chuyển hướng đến trang đăng nhập...");
+            setTimeout(() => {
+                navigate("/login");
+            }, 1000);
         } catch (err) {
-            setError("Có lỗi xảy ra. Vui lòng thử lại.");
+            setError(err.message);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -62,6 +71,7 @@ const Register = () => {
                         placeholder="First Name"
                         value={formData.firstName}
                         onChange={handleChange}
+                        required
                     />
                 </div>
                 <div className="formGroup">
@@ -72,6 +82,7 @@ const Register = () => {
                         placeholder="Last Name"
                         value={formData.lastName}
                         onChange={handleChange}
+                        required
                     />
                 </div>
                 <div className="formGroup">
@@ -82,6 +93,7 @@ const Register = () => {
                         placeholder="Email"
                         value={formData.email}
                         onChange={handleChange}
+                        required
                     />
                 </div>
                 <div className="formGroup">
@@ -92,10 +104,14 @@ const Register = () => {
                         placeholder="Password"
                         value={formData.password}
                         onChange={handleChange}
+                        required
                     />
                 </div>
-                <button type="submit" className="registerBtn">Register</button>
+                <button type="submit" className="registerBtn" disabled={loading}>
+                    {loading ? "Đang đăng ký..." : "Register"}
+                </button>
             </form>
+            {successMessage && <p className="successMessage">{successMessage}</p>}
             {error && <p className="errorMessage">{error}</p>}
         </div>
     );

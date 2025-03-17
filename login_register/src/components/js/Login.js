@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "../css/login.css"; // Import file CSS
 
 const Login = () => {
     const [credentials, setCredentials] = useState({ email: "", password: "" });
     const [error, setError] = useState("");
-    const [successMessage, setSuccessMessage] = useState("");
     const navigate = useNavigate();
 
     const handleChange = (e) => {
@@ -31,15 +30,17 @@ const Login = () => {
 
             if (response.ok) {
                 const data = await response.json();
-                localStorage.setItem("token", data.token); // Lưu token vào localStorage
-                setSuccessMessage("Đăng nhập thành công!");
+                localStorage.setItem("token", data.token);
+                localStorage.setItem("role", data.role); // Lưu role vào localStorage
 
-                setTimeout(() => {
-                    navigate("/"); // Chuyển hướng sau khi đăng nhập
-                }, 1000);
+                if (data.role === "ROLE_USER") {
+                    navigate("/hello-user"); // Chuyển đến HelloUser.js nếu là ROLE_USER
+                } else {
+                    setError("Bạn không có quyền truy cập.");
+                }
             } else {
                 const errorData = await response.json();
-                setError(errorData.message || "Đăng nhập thất bại! Vui lòng thử lại.");
+                setError(errorData.message || "Đăng nhập thất bại!");
             }
         } catch (err) {
             setError("Có lỗi xảy ra. Vui lòng thử lại.");
@@ -72,10 +73,6 @@ const Login = () => {
                 </div>
                 <button type="submit" className="loginBtn">Login</button>
             </form>
-            <p style={{ textAlign: "center", marginTop: "10px" }}>
-                Don't have an account? <Link to="/register">Register</Link>
-            </p>
-            {successMessage && <p className="successMessage">{successMessage}</p>}
             {error && <p className="errorMessage">{error}</p>}
         </div>
     );
