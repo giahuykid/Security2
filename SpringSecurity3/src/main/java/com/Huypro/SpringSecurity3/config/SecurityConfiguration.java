@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -25,34 +24,35 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-
 public class SecurityConfiguration {
 
-@Autowired
+    @Autowired
     private AuthenticationProvider authenticationProvider;
-@Autowired
-    private  JWTAuthFilter jwtAuthFilter;
+
+    @Autowired
+    private JWTAuthFilter jwtAuthFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Áp dụng CORS đúng vị trí
                 .authorizeHttpRequests(req ->
-                        req.requestMatchers("/register/**", "/logout","/login").permitAll()
+                        req.requestMatchers("/register/**", "/logout", "/login", "/public/**").permitAll() // Cho phép OPTIONS request
                                 .requestMatchers("/management/**").hasAnyAuthority(ROLE_ADMIN.name(), ROLE_USER.name())
-                                .anyRequest()
-                                .authenticated())
+                                .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .cors(Customizer.withDefaults())
                 .build();
     }
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList(
-                "http://localhost:3000", "http://localhost:8080", "http://18.142.237.185:8080"
+                "http://localhost:3000", "http://localhost:8080",
+                "http://18.142.237.185:8080", "http://giahuy.me"
         ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Collections.singletonList("*"));
