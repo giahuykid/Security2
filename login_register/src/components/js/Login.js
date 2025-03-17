@@ -17,6 +17,9 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError(""); // Xóa lỗi cũ
+
+        console.log("⏳ Đang gửi yêu cầu đăng nhập...");
 
         try {
             const response = await fetch("http://18.142.237.185:8080/login", {
@@ -28,27 +31,37 @@ const Login = () => {
                 credentials: "include",
             });
 
-            if (response.ok) {
-                const data = await response.json();
-                localStorage.setItem("token", data.token);
-                localStorage.setItem("role", data.role); // Lưu role vào localStorage
-                console.log("Token:", localStorage.getItem("token"));
-                console.log("Role:", localStorage.getItem("role"));
-                console.log("Response from API:", data);
+            console.log("📩 Phản hồi từ server:", response);
 
-                if (data.role === "ROLE_USER") {
-                    console.log("Chuyển hướng đến /hello-user...");
-
-                    navigate("/hello-user"); // Chuyển đến HelloUser.js nếu là ROLE_USER
-                } else {
-                    setError("Bạn không có quyền truy cập.");
-                }
-            } else {
+            if (!response.ok) {
                 const errorData = await response.json();
-                setError(errorData.message || "Đăng nhập thất bại!");
+                throw new Error(errorData.message || "Đăng nhập thất bại!");
+            }
+
+            const data = await response.json();
+            console.log("✅ Dữ liệu nhận được:", data);
+
+            if (!data.token || !data.role) {
+                throw new Error("Dữ liệu không hợp lệ từ server!");
+            }
+
+            // Lưu token & role vào localStorage
+            localStorage.setItem("token", data.token);
+            localStorage.setItem("role", data.role);
+
+            console.log("🔑 Token:", localStorage.getItem("token"));
+            console.log("👤 Role:", localStorage.getItem("role"));
+
+            // Chuyển hướng theo role
+            if (data.role === "ROLE_USER") {
+                console.log("🔄 Chuyển hướng đến /hello-user...");
+                navigate("/hello-user");
+            } else {
+                throw new Error("Bạn không có quyền truy cập.");
             }
         } catch (err) {
-            setError("Có lỗi xảy ra. Vui lòng thử lại.");
+            console.error("❌ Lỗi:", err.message);
+            setError(err.message);
         }
     };
 
