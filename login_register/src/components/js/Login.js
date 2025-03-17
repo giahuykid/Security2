@@ -32,8 +32,13 @@ const Login = () => {
                 const data = await response.json();
                 localStorage.setItem("token", data.token);
                 localStorage.setItem("role", data.role); // Lưu role vào localStorage
+                console.log("Token:", localStorage.getItem("token"));
+                console.log("Role:", localStorage.getItem("role"));
+                console.log("Response from API:", data);
 
                 if (data.role === "ROLE_USER") {
+                    console.log("Chuyển hướng đến /hello-user...");
+
                     navigate("/hello-user"); // Chuyển đến HelloUser.js nếu là ROLE_USER
                 } else {
                     setError("Bạn không có quyền truy cập.");
